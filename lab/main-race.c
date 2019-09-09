@@ -8,9 +8,11 @@ int balance = 0;
 pthread_mutex_t lock;
 
 void* worker(void* arg) {
-    Pthread_mutex_lock(&lock);
-    balance++; // unprotected access
-    Pthread_mutex_unlock(&lock);
+    //Pthread_mutex_lock(&lock);
+    printf("estoy en el lock del hijo\n");
+    //balance++; // unprotected access
+    //Pthread_mutex_unlock(&lock);
+    printf("estoy fuera de lock del hijo\n");
 
     return NULL;
 }
@@ -21,10 +23,11 @@ int main(int argc, char *argv[]) {
     pthread_t p;
     Pthread_create(&p, NULL, worker, NULL);
 
-    Pthread_mutex_lock(&lock);
+    //Pthread_mutex_lock(&lock);
     balance++; // unprotected access
-    Pthread_mutex_unlock(&lock);
-
+    printf("estoy en el lock\n");
+    //Pthread_mutex_unlock(&lock);
+    printf("sali del lock\n");
     Pthread_join(p, NULL);
     return 0;
 }
