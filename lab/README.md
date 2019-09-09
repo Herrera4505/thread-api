@@ -21,11 +21,27 @@ En esta sección escribiremos algunos programas multi-hilo y usaremos una herram
     ![enlace](https://raw.githubusercontent.com/Herrera4505/thread-api/master/lab/imagenes/raceNobalance.png)
 
 3. Ahora observe ```main-deadlock.c```. Examine el código. Este código tiene un problema conocido como deadlock. ¿Puede ver que problema podrá este tener?
+
+    *R/ El hilo p1 intentara adquirir el lock de la variable m1 y luego de m2, pero tambien lo intentara el hilo p2, si existe un cambio de contexto luego de que un hilo a adquirido m1, no podra adquirir m2 ya que sera p2 quien lo adquiera, ningun hilo podra continuar su ejecucion al la espera de el otro lock, produciendo un interbloqueo *Deadlock*.
+
 4. Ahora ejecute ```helgrind``` en este código. ¿Qué reporta helgrind?
+
+    *R/ Muestra que se tiene un error, una violacion en el hilo 3, quien adquirio el lock de m2 *0X6020E0* pero no pudo adquirir el de m1, el segundo hilo p1 adquirio el lock de m1 *0X6020A0*.
+
+    ![enlace](https://raw.githubusercontent.com/Herrera4505/thread-api/master/lab/imagenes/deadLock.png)
+
 5. Ahora ejecute ```helgrind``` en ```main-deadlock-global.c```. Examine el código. ¿Tiene este el mismo problema que ```main-deadlock.c```? ¿Muestra ```helgrind``` el mismo reporte de error? ¿Qué dice esto a cerca de herramientas como ```helgrind```?
+
+    *R/ 
+
+    ![enlace](https://raw.githubusercontent.com/Herrera4505/thread-api/master/lab/imagenes/deadlockGlobal.png)
+
 6. Ahora observe ```main-signal.c```. Este código usa una variable (```done```) para señalar que el hijo esta hecho y que el padre puede continuar. ¿Por qué este códido es ineficiente? (En que termina el padre dedicando su tiempo, si el hijo toma una gran cantidad de tiempo en completarse).
+
 7. Ahora ejecute ```helgrind``` para este programa. ¿Qué reporta helgrind?, ¿Es correcto el código?
+
 8. Ahora observe una versión levemente modificada del código, la cual es encontrada en ```main-signal-cv.c```. Esta versión usa una variable de condición para señalizar (y asociar un lock). ¿Por qué este código es mejor que la versión previa? ¿Es la corrección, o el desempeño, o ambos?
+
 9. Ejecute de nuevo ```helgrind``` en ```main-signal-cv``` ¿Reporta algunos errores?
 
 **Nota**: Se adjuntan los códigos para facilitar en análisis.
