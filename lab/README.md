@@ -32,15 +32,23 @@ En esta sección escribiremos algunos programas multi-hilo y usaremos una herram
 
 5. Ahora ejecute ```helgrind``` en ```main-deadlock-global.c```. Examine el código. ¿Tiene este el mismo problema que ```main-deadlock.c```? ¿Muestra ```helgrind``` el mismo reporte de error? ¿Qué dice esto a cerca de herramientas como ```helgrind```?
 
-    *R/ 
+    *R/ Este codigo no tiene el mismo problema, ya que implementa un mutex con una variable global *g*, que bloquea la zona donde estan los demas mutex, sin embargo al ejecutar el helgrind, aparece reportado el mismo error del codigo anterior lo que nos enseña que no es completamente confiable la informacion arrojada por herramientas como *helgrind*.
 
     ![enlace](https://raw.githubusercontent.com/Herrera4505/thread-api/master/lab/imagenes/deadlockGlobal.png)
 
 6. Ahora observe ```main-signal.c```. Este código usa una variable (```done```) para señalar que el hijo esta hecho y que el padre puede continuar. ¿Por qué este códido es ineficiente? (En que termina el padre dedicando su tiempo, si el hijo toma una gran cantidad de tiempo en completarse).
 
+    *R/Este codigo a pesar de funcionar, no es eficiente debido a que mientras el padre espera a que el hijo termine, que podria ser mucho tiempo en otros casos, va a consumir recursos sin necesidad, en una espera activa desperdicia tiempo de cpu. 
+
 7. Ahora ejecute ```helgrind``` para este programa. ¿Qué reporta helgrind?, ¿Es correcto el código?
 
+    *R/Reporta un posible *race condition* aunque no es un problema real, se debe a que la variable *done* es global y es utilizada tanto por el padre en la espera, como por el hijo para indicar que ya fue ejecutado.
+
+    ![enlace](https://raw.githubusercontent.com/Herrera4505/thread-api/master/lab/imagenes/mainSignal.png)
+
 8. Ahora observe una versión levemente modificada del código, la cual es encontrada en ```main-signal-cv.c```. Esta versión usa una variable de condición para señalizar (y asociar un lock). ¿Por qué este código es mejor que la versión previa? ¿Es la corrección, o el desempeño, o ambos?
+
+    *R/Esta version es mejor debido a que no consume tiempo de cpu por el hilo padre, mientras es ejecutado el hijo, a traves del wait, el padre duerme a la espera de poder continuar.
 
 9. Ejecute de nuevo ```helgrind``` en ```main-signal-cv``` ¿Reporta algunos errores?
 
